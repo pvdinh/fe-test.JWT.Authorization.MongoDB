@@ -2,15 +2,16 @@ import React, {useEffect} from "react";
 import {connect} from "react-redux";
 import {Button, Modal, Table} from 'antd';
 import majorCLassActions from "../../redux/actions/majorCLassActions";
+import {Link} from "react-router-dom";
 
 function ModalMajorsClass(props) {
 
-    useEffect(()=>{
-        props.getListMajorClass((data)=>{
-            console.log("listStudents",props.listStudents)
-            console.log("listMajorClass",data)
+    useEffect(() => {
+        props.getListMajorClass((data) => {
+            console.log("listStudents", props.listStudents)
+            console.log("listMajorClass", data)
         })
-    },[props.msv])
+    }, [props.msv])
 
 
     const columns = [
@@ -38,42 +39,46 @@ function ModalMajorsClass(props) {
                     <Button onClick={() => {
                         addStudentToClass(id)
                     }}>Thêm vào lớp này</Button>&nbsp;&nbsp;
-                    <Button onClick={() => {
-                        alert("Thêm")
-                    }}>Xem chi tiết lớp</Button>&nbsp;&nbsp;
+                    <Button href={`/class/${id}`}>Xem chi tiết lớp</Button>&nbsp;&nbsp;
                 </div>
             )
         },
     ];
 
-    const addStudentToClass = (id) =>{
-        const cl = props.listMajorsClass.find(x=>x.id === id)
-        props.addStudentToClass(props.msv,cl)
+    const addStudentToClass = (id) => {
+        const cl = props.listMajorsClass.find(x => x.id === id)
+        props.addStudentToClass(props.msv, cl)
     }
 
-    return(
+    return (
         <div>
-            <Modal title={`Thêm sinh viên vào lớp ( msv: ${props.msv} )`} width={'720px'} visible={props.isVisible} onCancel={()=>{props.setIsVisible()}}>
+            <Modal title={`Thêm sinh viên vào lớp ( msv: ${props.msv} )`} width={'720px'} visible={props.isVisible}
+                   onCancel={() => {
+                       props.setIsVisible()
+                   }}>
                 <h3>Danh sách lớp</h3>
                 <Table dataSource={props.listMajorsClass} columns={columns}/>
             </Modal>
         </div>
     )
 }
+
 function mapStateToProps(state) {
-    return{
+    return {
         listMajorsClass: state.majorClass.listMajorsClass,
         listStudents: state.student.listStudents,
     }
 }
+
 function mapDispatchToProps(dispatch) {
-    return{
-        getListMajorClass: (callBack) =>{
+    return {
+        getListMajorClass: (callBack) => {
             dispatch(majorCLassActions.action.getListMajorClass(callBack))
         },
-        addStudentToClass: (id,majorClass) =>{
-            dispatch(majorCLassActions.action.addStudentToClass(id,majorClass))
+        addStudentToClass: (id, majorClass) => {
+            dispatch(majorCLassActions.action.addStudentToClass(id, majorClass))
         },
     }
 }
-export default connect(mapStateToProps,mapDispatchToProps)(ModalMajorsClass)
+
+export default connect(mapStateToProps, mapDispatchToProps)(ModalMajorsClass)

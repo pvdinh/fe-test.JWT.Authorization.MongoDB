@@ -8,3 +8,11 @@ export const addStudentToClass = (data) => {
     let majorClassRequest = new MajorClassRequest()
     return majorClassRequest.addStudentToClass(data)
 }
+export const getAllStudentsByIdClass = (id) => {
+    let majorClassRequest = new MajorClassRequest()
+    return majorClassRequest.getAllStudentsByIdClass(id)
+}
+export const getMajorClassById = (id) => {
+    let majorClassRequest = new MajorClassRequest()
+    return majorClassRequest.getMajorClassById(id)
+}
