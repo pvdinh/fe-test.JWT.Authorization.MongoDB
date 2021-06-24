@@ -3,6 +3,7 @@ import {BrowserRouter, BrowserRouter as Router, Redirect, Route, Switch, useHist
 import StudentComponent from "./StudentComponent";
 import LoginComponent from "./auth/LoginComponent";
 import ListStudentInMajorClassComponent from "./majorsClass/ListStudentInMajorClassComponent";
+import Component403 from "./403/Component403";
 
 
 function AppRouter() {
@@ -21,6 +22,9 @@ function AppRouter() {
                     }}></Route>
                     <Route path={'/login'} exact render={()=>{
                         return  localStorage.getItem("sessionToken") ? <Redirect to={'/students'} /> : <LoginComponent />
+                    }}></Route>
+                    <Route path={'/403'} exact render={()=>{
+                        return  <Component403 />
                     }}></Route>
                 </Switch>
             </Router>

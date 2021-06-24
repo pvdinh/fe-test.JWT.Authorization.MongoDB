@@ -7,6 +7,7 @@ import {
     getMajorClassById
 } from "../../services/MajorClassApiServices";
 import studentActions from "../actions/studentActions";
+import notification from '../../components/notification'
 
 function* getListMajorClassSaga(action) {
     try {
@@ -33,6 +34,8 @@ function* getAllStudentsByIdClassSaga(action) {
         const response = yield call(getAllStudentsByIdClass,action.payload.id)
         yield put({type: majorCLassActions.type.GET_ALL_STUDENTS_BY_ID_CLASS_SUCCESS, data: response.data})
     } catch (e) {
+        window.location.href='/403'
+        // notification('error','Thông báo','Bạn không có quyền truy cập trang web này!')
         console.log('err', e)
     }
 }
