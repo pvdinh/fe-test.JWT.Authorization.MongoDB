@@ -36,9 +36,9 @@ export default class BaseRequest {
         }
     }
 
-    async put(url,data ={}){
+    async put(url,data ={},params){
         try{
-            const response = await axioscfg.put(`${BASE_URL}/${this.version}/${url}`,{...data})
+            const response = await axioscfg.put(`${BASE_URL}/${this.version}/${url}`,{...data},{params:params})
             return this._responseHandle(response)
         }catch (e) {
             this._errorHandle(e)

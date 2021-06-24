@@ -9,7 +9,9 @@ import notification from '../components/notification'
 import {useHistory} from "react-router";
 import loginActions from "../redux/actions/loginActions";
 import ModalMajorsClass from "./majorsClass/ModalMajorsClass";
-const { Option } = Select;
+
+const {Option} = Select;
+
 function StudentComponent(props) {
 
     const [isModalVisibleChange, setIsModalVisibleChange] = useState(false)
@@ -21,17 +23,18 @@ function StudentComponent(props) {
     const [address, setAddress] = useState("")
     const [id, setId] = useState("")
     const [idClick, setIdClick] = useState('')
+    const [idClickAddToClass, setIdClickAddToClass] = useState('')
 
     //
-    const [isVisibleModalMajorsClass,setIsVisibleModalMajorsClass] = useState(false)
+    const [isVisibleModalMajorsClass, setIsVisibleModalMajorsClass] = useState(false)
 
     let history = useHistory()
 
 
     useEffect(() => {
-        console.log("AAA")
         props.getAllStudents()
-    }, [])
+    }, [isVisibleModalMajorsClass])
+
 
     const handleOkChange = () => {
         props.updateStudent({
@@ -104,7 +107,7 @@ function StudentComponent(props) {
     }
 
     const showModalMajorsClass = (id) => {
-        setIdClick(id)
+        setIdClickAddToClass(id)
         setIsVisibleModalMajorsClass(true)
     }
 
@@ -194,31 +197,45 @@ function StudentComponent(props) {
         props.searchStudent(e.target.value)
     }
 
-    const handleChangeGander = (value) =>{
+    const handleChangeGander = (value) => {
         setGender(value)
     }
-    const logout =() =>{
+    const logout = () => {
         props.logout()
         history.replace('/login')
+    }
+    const showModalClass = () => {
+        if (idClickAddToClass !== "") {
+            return <ModalMajorsClass msv={idClickAddToClass} isVisible={isVisibleModalMajorsClass} setIsVisible={() => {
+                setIsVisibleModalMajorsClass(false)
+            }}/>
+        }
     }
     return (
         <div className='wrap-student'>
             <div className='header-student'>Quản lý sinh viên</div>
             <div className='header-student' style={{display: 'flex', justifyContent: 'center'}}>
-                <button className='btn-add' onClick={()=>{logout()}}>Logout</button>&nbsp;&nbsp;
+                <button className='btn-add' onClick={() => {
+                    logout()
+                }}>Logout
+                </button>
+                &nbsp;&nbsp;
                 <button className='btn-add' onClick={() => {
                     openModalAddStudent()
                 }}>Thêm sinh viên
                 </button>
                 &nbsp;&nbsp;
-                <Input.Search allowClear style={{width: '40%'}} defaultValue="" placeholder='Tìm theo mã sinh viên hoặc email' onChange={(e) => {
+                <Input.Search allowClear style={{width: '40%'}} defaultValue=""
+                              placeholder='Tìm theo mã sinh viên hoặc email' onChange={(e) => {
                     onChangeSearch(e)
                 }}/>
             </div>
 
             <div className='wrap-student-table'>
                 {
-                    props.listStudentsResultSearch.length > 0 ? <Table dataSource={props.listStudentsResultSearch} columns={columns}/> : <Table dataSource={props.listStudents} columns={columns}/>
+                    props.listStudentsResultSearch.length > 0 ?
+                        <Table dataSource={props.listStudentsResultSearch} columns={columns}/> :
+                        <Table dataSource={props.listStudents} columns={columns}/>
 
                 }
             </div>
@@ -239,12 +256,14 @@ function StudentComponent(props) {
                 <Input name='email' value={email} onChange={(e) => {
                     onChangeStudent(e)
                 }}></Input>
-                <label>Giới tính</label><br />
-                <Select defaultValue={gender} onChange={(value)=>{handleChangeGander(value)}}>
+                <label>Giới tính</label><br/>
+                <Select defaultValue={gender} onChange={(value) => {
+                    handleChangeGander(value)
+                }}>
                     <Option value="male">male</Option>
                     <Option value="female">female</Option>
                     <Option value="hide">hide</Option>
-                </Select><br />
+                </Select><br/>
                 <label>Địa chỉ</label>
                 <Input name='diachi' value={address} onChange={(e) => {
                     onChangeStudent(e)
@@ -273,19 +292,23 @@ function StudentComponent(props) {
                     <Input name='email' onChange={(e) => {
                         onChangeStudent(e)
                     }}></Input>
-                    <label>Giới tính</label><br />
-                    <Select defaultValue='hide' onChange={(value)=>{handleChangeGander(value)}}>
+                    <label>Giới tính</label><br/>
+                    <Select defaultValue='hide' onChange={(value) => {
+                        handleChangeGander(value)
+                    }}>
                         <Option value="male">male</Option>
                         <Option value="female">female</Option>
                         <Option value="hide">hide</Option>
-                    </Select><br />
+                    </Select><br/>
                     <label>Địa chỉ</label>
                     <Input name='diachi' onChange={(e) => {
                         onChangeStudent(e)
                     }}></Input>
                 </form>
             </Modal>
-            <ModalMajorsClass msv={idClick} isVisible={isVisibleModalMajorsClass} setIsVisible={()=>{setIsVisibleModalMajorsClass(false)}} />
+            {
+                showModalClass()
+            }
         </div>
     )
 }
@@ -313,7 +336,7 @@ const mapDispatchToProps = dispatch => {
         searchStudent: (s) => {
             dispatch(studentActions.action.searchStudent(s))
         },
-        logout:()=>{
+        logout: () => {
             dispatch(loginActions.action.logout())
         },
     }

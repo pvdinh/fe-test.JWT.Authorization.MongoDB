@@ -6,9 +6,11 @@ import majorCLassActions from "../../redux/actions/majorCLassActions";
 function ModalMajorsClass(props) {
 
     useEffect(()=>{
-        console.log("BBB")
-        props.getListMajorClass()
-    },[])
+        props.getListMajorClass((data)=>{
+            console.log("listStudents",props.listStudents)
+            console.log("listMajorClass",data)
+        })
+    },[props.msv])
 
 
     const columns = [
@@ -34,7 +36,7 @@ function ModalMajorsClass(props) {
             render: (id) => (
                 <div>
                     <Button onClick={() => {
-                        alert("Thêm")
+                        addStudentToClass(id)
                     }}>Thêm vào lớp này</Button>&nbsp;&nbsp;
                     <Button onClick={() => {
                         alert("Thêm")
@@ -43,6 +45,11 @@ function ModalMajorsClass(props) {
             )
         },
     ];
+
+    const addStudentToClass = (id) =>{
+        const cl = props.listMajorsClass.find(x=>x.id === id)
+        props.addStudentToClass(props.msv,cl)
+    }
 
     return(
         <div>
@@ -56,12 +63,16 @@ function ModalMajorsClass(props) {
 function mapStateToProps(state) {
     return{
         listMajorsClass: state.majorClass.listMajorsClass,
+        listStudents: state.student.listStudents,
     }
 }
 function mapDispatchToProps(dispatch) {
     return{
-        getListMajorClass: () =>{
-            dispatch(majorCLassActions.action.getListMajorClass())
+        getListMajorClass: (callBack) =>{
+            dispatch(majorCLassActions.action.getListMajorClass(callBack))
+        },
+        addStudentToClass: (id,majorClass) =>{
+            dispatch(majorCLassActions.action.addStudentToClass(id,majorClass))
         },
     }
 }
