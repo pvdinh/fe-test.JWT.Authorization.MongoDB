@@ -16,3 +16,7 @@ export const getMajorClassById = (id) => {
     let majorClassRequest = new MajorClassRequest()
     return majorClassRequest.getMajorClassById(id)
 }
+export const deleteStudentFromMajorClass = (data) => {
+    let majorClassRequest = new MajorClassRequest()
+    return majorClassRequest.deleteStudentFromMajorClass(data)
+}

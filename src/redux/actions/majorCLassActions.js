@@ -5,6 +5,7 @@ const type={
     GET_ALL_STUDENTS_BY_ID_CLASS:"GET_ALL_STUDENTS_BY_ID_CLASS",
     GET_MAJOR_CLASS_BY_ID:"GET_MAJOR_CLASS_BY_ID",
     GET_ALL_STUDENTS_BY_ID_CLASS_SUCCESS:"GET_ALL_STUDENTS_BY_ID_CLASS_SUCCESS",
+    DELETE_STUDENT_FROM_MAJOR_CLASS:"DELETE_STUDENT_FROM_MAJOR_CLASS",
 }
 const action={
     getListMajorClass: (callback) =>{
@@ -33,6 +34,15 @@ const action={
     addStudentToClass: (id,majorClass) =>{
         return{
             type:type.ADD_STUDENT_TO_CLASS,
+            payload:{
+                id:id,
+                majorClass:majorClass,
+            }
+        }
+    },
+    deleteStudentFromMajorClass: (id,majorClass) =>{
+        return{
+            type:type.DELETE_STUDENT_FROM_MAJOR_CLASS,
             payload:{
                 id:id,
                 majorClass:majorClass,

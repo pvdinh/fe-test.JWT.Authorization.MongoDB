@@ -20,4 +20,9 @@ export default class MajorClassRequest extends BaseRequest {
         let url = 'class/'+id
         return this.get(url)
     }
+
+    deleteStudentFromMajorClass(data) {
+        let url = 'class/deleteStudent'
+        return this.put(url,data.majorClass,{idStudent:data.id})
+    }
 }

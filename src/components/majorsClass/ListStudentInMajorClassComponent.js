@@ -2,6 +2,8 @@ import React, {useEffect, useState} from "react";
 import {connect} from "react-redux";
 import majorCLassActions from "../../redux/actions/majorCLassActions";
 import {Button, Input, Modal, Table} from "antd";
+import {deleteStudent} from "../../services/StudentApiServices";
+import {ExclamationCircleOutlined} from "@ant-design/icons";
 
 function ListStudentInMajorClassComponent(props) {
     const [majorClass,setMajorClass] = useState({})
@@ -9,11 +11,28 @@ function ListStudentInMajorClassComponent(props) {
     // {props.match.params.id}
     useEffect(() => {
         console.log("props", props)
+        props.getAllStudentsByIdClass(props.match.params.id)
+    }, [])
+    useEffect(() => {
         props.getMajorClassById(props.match.params.id,(data)=>{
             setMajorClass(data[0])
         })
-        props.getAllStudentsByIdClass(props.match.params.id)
-    }, [])
+    }, [props.listStudents])
+
+    const deleteStudentFromClass = (id,majorClass) =>{
+        Modal.confirm({
+            title: 'Xoá',
+            icon: <ExclamationCircleOutlined/>,
+            content: 'Bạn có chắc xoá !',
+            okText: 'Xác nhân',
+            cancelText: 'Huỷ bỏ',
+            onOk: () => {
+                props.deleteStudentFromMajorClass(id,majorClass)
+            },
+            closable: true,
+            maskClosable: true,
+        });
+    }
 
     const columns = [
         {
@@ -52,7 +71,7 @@ function ListStudentInMajorClassComponent(props) {
             key: 'id',
             render: (id) => (
                 <div>
-                    <Button>Xoá sinh viên khỏi lớp</Button>
+                    <Button onClick={()=>{deleteStudentFromClass(id,majorClass)}}>Xoá sinh viên khỏi lớp</Button>
                 </div>
             )
         }
@@ -94,6 +113,9 @@ function mapDispatchToProps(dispatch) {
         },
         getMajorClassById: (id,callback) => {
             dispatch(majorCLassActions.action.getMajorClassById(id,callback))
+        },
+        deleteStudentFromMajorClass: (id,majorClass) => {
+            dispatch(majorCLassActions.action.deleteStudentFromMajorClass(id,majorClass))
         },
     }
 }

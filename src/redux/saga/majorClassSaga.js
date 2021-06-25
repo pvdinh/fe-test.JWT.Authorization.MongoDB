@@ -1,7 +1,7 @@
 import {all, call, put, takeEvery, takeLatest} from "redux-saga/effects";
 import majorCLassActions from "../actions/majorCLassActions";
 import {
-    addStudentToClass,
+    addStudentToClass, deleteStudentFromMajorClass,
     getAllStudentsByIdClass,
     getListMajorClass,
     getMajorClassById
@@ -22,8 +22,26 @@ function* getListMajorClassSaga(action) {
 function *addStudentToClassSaga(action) {
     try {
         const res = yield call(addStudentToClass,action.payload)
-        const response = yield call(getListMajorClass)
-        yield put({type: majorCLassActions.type.GET_LIST_MAJOR_CLASS_SUCCESS, payload: response.data})
+        if(res.statusCode === 200){
+            const response = yield call(getListMajorClass)
+            yield put({type: majorCLassActions.type.GET_LIST_MAJOR_CLASS_SUCCESS, payload: response.data})
+            notification('success','Thông báo','Thêm thành công !')
+        }else {
+            notification('error','Thông báo','Thêm thất bại do sinh viên này đã tồn tại trong lớp !')
+        }
+    }catch (e) {
+        console.log("err",e)
+    }
+}
+
+function *deleteStudentFromMajorClassSaga(action) {
+    try {
+        const res = yield call(deleteStudentFromMajorClass,action.payload)
+        if(res.statusCode === 200){
+            const response = yield call(getAllStudentsByIdClass,action.payload.majorClass.id)
+            yield put({type: majorCLassActions.type.GET_ALL_STUDENTS_BY_ID_CLASS_SUCCESS, data: response.data})
+            notification('success','Thông báo','Xoá thành công !')
+        }
     }catch (e) {
         console.log("err",e)
     }
@@ -54,6 +72,7 @@ function* listen() {
     yield takeEvery(majorCLassActions.type.ADD_STUDENT_TO_CLASS, addStudentToClassSaga)
     yield takeEvery(majorCLassActions.type.GET_ALL_STUDENTS_BY_ID_CLASS, getAllStudentsByIdClassSaga)
     yield takeEvery(majorCLassActions.type.GET_MAJOR_CLASS_BY_ID, getMajorClassByIdSaga)
+    yield takeEvery(majorCLassActions.type.DELETE_STUDENT_FROM_MAJOR_CLASS, deleteStudentFromMajorClassSaga)
 }
 
 function* majorClassSaga() {
